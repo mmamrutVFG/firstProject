@@ -1,24 +1,27 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const User = sequelize.define('user', {
+    const Person = sequelize.define('person', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             allowNull: false,
             primaryKey: true
         },
-        password: {
+        name: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        email: {
+        ci: {
             type: Sequelize.STRING,
             allowNull: false,
+        },
+        adress: {
+            type: Sequelize.STRING
         }
     });
-    User.associate = db=>{
-        User.belongsTo(db.people, {foreignKey: 'personId'});
+    Person.associate = db=>{
+        Person.hasOne(db.users, {foreignKey: 'personId'})
     }
-    return User;
+    return Person;
 }

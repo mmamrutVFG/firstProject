@@ -7,20 +7,17 @@ const express = require('express');
 const cors = require('cors');
 
 const indexRoute = require('./routes/index');
-const sequelize = require('./util/database');
+const {sequelize, User} = require('./models/index');
 const app = express();
 
 app.use(cors());
 app.use('/', indexRoute);
 
-try{
-    sequelize.authenticate();
-    console.log('DB Ok')
-} catch(err){
-    console.log('DB Fail, ', err);
-}
+(async () => {              //alter: nombreClase, actualiza las tablas (columnas)
+    await sequelize.sync(); //force: borra todos los datos
+    console.log("Database ready");
+  })();
 
-sequelize.sync()
 const port = process.env.PORT;
 
 app.listen(port,()=>{console.log(`listening on port: ${port}`)});
