@@ -1,3 +1,4 @@
+//const sequelize = require('./util/database');
 
 exports.getUserData = (req, res, next) => {
     res.status(200).json({
