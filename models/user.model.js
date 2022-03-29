@@ -18,7 +18,8 @@ module.exports = (sequelize) => {
         }
     });
     User.associate = db=>{
-        User.belongsTo(db.people, {foreignKey: 'personId'});
+        User.belongsTo(db.people, {foreignKey: 'personId'})
+        //User.hasMany(db.products);
     }
     return User;
 }
