@@ -1,10 +1,7 @@
-//const sequelize = require('./util/database');
+const { User } = require("../models");
 
-exports.getUserData = (req, res, next) => {
-    res.status(200).json({
-        name: 'Juan',
-        email: 'xxx@xxx.com',
-        adress: 'Jaime Zudañez 1110'
-    })
-}
+exports.getUsersData = () => User.findAll();
 
+exports.createUserData = (data) => User.create(data);
+
+exports.deleteUserById = ({ id }) => User.destroy({ where: { id } });
