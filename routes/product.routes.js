@@ -1,11 +1,11 @@
 const express = require("express");
 
 const router = express.Router();
-const userController = require("../controllers/users.controller");
+const productController = require("../controllers/product.controller");
 
 router.get("/getAll", async (req, res, next) => {
   try {
-    const result = await userController.getUsersData();
+    const result = await productController.getUsersData();
     res.status(200).json(result);
   } catch (err) {
     next(err);
@@ -14,7 +14,7 @@ router.get("/getAll", async (req, res, next) => {
 
 router.post("/create", async (req, res, next) => {
   try {
-    await userController.createUserData(req.body);
+    await productController.createProductData(req.body);
     res.sendStatus(201);
   } catch (err) {
     next(err);
@@ -23,7 +23,7 @@ router.post("/create", async (req, res, next) => {
 
 router.delete("/delete/:id", async (req, res, next) => {
   try {
-    await userController.deleteUserById(req.params); // params se usa cuando paso la info dentro del URL
+    await productController.deleteUserById(req.params); // params se usa cuando paso la info dentro del URL
     res.sendStatus(200);
   } catch (err) {
     next(err);
