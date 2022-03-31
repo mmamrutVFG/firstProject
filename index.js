@@ -12,14 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 app.use("/", indexRoute);
-app.use((err, res, req, next) => {
-  res.status(err.status).json(err);
-});
+app.use((err, req, res, next) => res.status(err.status).json(err));
 
 (async () => {
   // alter: nombreClase, actualiza las tablas (columnas)
   await sequelize.sync(); // force: borra todos los datos
-  console.log("Database ready");
 })();
 
 const port = process.env.PORT;
