@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
   });
   User.associate = (db) => {
     // User.hasMany(db.products, {}),
-    User.belongsTo(db.people, { foreignKey: "personId" });
+    User.hasOne(db.people, { foreignKey: "personId" });
   };
   return User;
 };

@@ -30,4 +30,13 @@ router.delete("/delete/:id", async (req, res, next) => {
   }
 });
 
+router.delete("/deleteAll", async (req, res, next) => {
+  try {
+    await userController.deleteAllUsers();
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
