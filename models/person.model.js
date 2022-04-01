@@ -19,12 +19,12 @@ module.exports = (sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    adress: {
+    address: {
       type: Sequelize.STRING,
     },
   });
   Person.associate = (db) => {
-    Person.hasOne(db.users, { foreignKey: "personId" });
+    Person.belongsTo(db.users, { foreignKey: "personId" });
   };
   return Person;
 };

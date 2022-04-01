@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 const productController = require("../controllers/product.controller");
-
+/*
 router.get("/getAll", async (req, res, next) => {
   try {
     const result = await productController.getUsersData();
@@ -29,5 +29,6 @@ router.delete("/delete/:id", async (req, res, next) => {
     next(err);
   }
 });
+*/
 
 module.exports = router;
