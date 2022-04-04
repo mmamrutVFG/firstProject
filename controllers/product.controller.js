@@ -38,3 +38,11 @@ exports.deleteAllProducts = async ({ id }) => {
     });
   }
 };
+
+exports.associateUser = async (productId, userId) => {
+  try {
+    await Product.update({ userId }, { where: { id: +productId } });
+  } catch (err) {
+    throw createError(501, "Not able to associate the user");
+  }
+};

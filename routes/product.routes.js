@@ -39,4 +39,13 @@ router.delete("/deleteAll", async (req, res, next) => {
   }
 });
 
+router.put("/associateTo/:id", async (req, res, next) => {
+  try {
+    await productController.associateUser(req.params.id, req.body.userId);
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

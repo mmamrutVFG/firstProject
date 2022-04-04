@@ -3,7 +3,7 @@ const Sequelize = require("sequelize");
  * @param {import('sequelize').Sequelize} sequelize
  */
 module.exports = (sequelize) => {
-  const Product = sequelize.define("product", {
+  const Supplier = sequelize.define("supplier", {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
@@ -14,13 +14,14 @@ module.exports = (sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    price: { type: Sequelize.INTEGER },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
   });
-
-  Product.associate = (db) => {
-    Product.belongsTo(db.users, { foreignKey: "userId" });
-    Product.belongsToMany(db.suppliers, { through: "supplierProduct" });
+  Supplier.associate = (db) => {
+    Supplier.belongsToMany(db.products, { through: "supplierProduct" });
   };
 
-  return Product;
+  return Supplier;
 };

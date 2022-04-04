@@ -1,10 +1,10 @@
 const createError = require("http-errors");
-const { User, Person } = require("../models");
+const { User, Person, Product } = require("../models");
 
 exports.getUsersData = async () => {
   try {
     return User.findAll({
-      include: [{ model: Person }],
+      include: [{ model: Person }, { model: Product }],
     });
   } catch (err) {
     throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
@@ -15,6 +15,7 @@ exports.createUserData = async (data) => {
   try {
     await User.create(data, { include: Person });
   } catch (err) {
+    console.log(err);
     throw createError(501, "Not able to create user", {
       attributes: { name: data.name },
     });

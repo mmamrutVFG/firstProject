@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
     },
   });
   Person.associate = (db) => {
-    Person.belongsTo(db.users, { foreignKey: "personId" });
+    Person.belongsTo(db.users, { foreignKey: "userId" });
   };
   return Person;
 };
