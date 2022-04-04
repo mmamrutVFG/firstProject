@@ -19,9 +19,10 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
   });
+
   User.associate = (db) => {
-    // User.hasMany(db.products, {}),
-    User.hasOne(db.people, { foreignKey: "personId" });
+    User.hasMany(db.products, { foreignKey: "userId" });
+    User.hasOne(db.people, { foreignKey: "userId" });
   };
   return User;
 };

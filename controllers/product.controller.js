@@ -3,7 +3,7 @@ const { Product } = require("../models");
 
 exports.getProductData = async () => {
   try {
-    await Product.findAll();
+    return Product.findAll();
   } catch (err) {
     throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
   }
@@ -14,7 +14,7 @@ exports.createProductData = async (data) => {
     await Product.create(data);
   } catch (err) {
     throw createError(501, "Not able to create product", {
-      attributes: { name: data.name },
+      attributes: { id: data.id },
     });
   }
 };
@@ -26,5 +26,23 @@ exports.deleteProductById = async ({ id }) => {
     throw createError(501, "Not able to delete the product", {
       attributes: { id },
     });
+  }
+};
+
+exports.deleteAllProducts = async ({ id }) => {
+  try {
+    await Product.destroy({ where: {} });
+  } catch (err) {
+    throw createError(501, "Not able to delete the product", {
+      attributes: { id },
+    });
+  }
+};
+
+exports.associateUser = async (productId, userId) => {
+  try {
+    await Product.update({ userId }, { where: { id: +productId } });
+  } catch (err) {
+    throw createError(501, "Not able to associate the user");
   }
 };

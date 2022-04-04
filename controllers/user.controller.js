@@ -1,10 +1,10 @@
 const createError = require("http-errors");
-const { User, Person } = require("../models");
+const { User, Person, Product } = require("../models");
 
 exports.getUsersData = async () => {
   try {
     return User.findAll({
-      include: [{ model: Person }],
+      include: [{ model: Person }, { model: Product }],
     });
   } catch (err) {
     throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
@@ -13,8 +13,9 @@ exports.getUsersData = async () => {
 
 exports.createUserData = async (data) => {
   try {
-    User.create(data);
+    await User.create(data, { include: Person });
   } catch (err) {
+    console.log(err);
     throw createError(501, "Not able to create user", {
       attributes: { name: data.name },
     });
@@ -23,7 +24,7 @@ exports.createUserData = async (data) => {
 
 exports.deleteUserById = async ({ id }) => {
   try {
-    User.destroy({ where: { id } });
+    await User.destroy({ where: { id } });
   } catch (err) {
     throw createError(501, "Not able to delete the user", {
       attributes: { id },
@@ -33,9 +34,7 @@ exports.deleteUserById = async ({ id }) => {
 
 exports.deleteAllUsers = async () => {
   try {
-    User.destroy({
-      where: {},
-    });
+    await User.destroy({ where: {} });
   } catch {
     createError(501, "Note able to delete all users");
   }
