@@ -13,7 +13,7 @@ exports.getUsersData = async () => {
 
 exports.createUserData = async (data) => {
   try {
-    User.create(data);
+    await User.create(data, { include: Person });
   } catch (err) {
     throw createError(501, "Not able to create user", {
       attributes: { name: data.name },
@@ -23,7 +23,7 @@ exports.createUserData = async (data) => {
 
 exports.deleteUserById = async ({ id }) => {
   try {
-    User.destroy({ where: { id } });
+    await User.destroy({ where: { id } });
   } catch (err) {
     throw createError(501, "Not able to delete the user", {
       attributes: { id },
@@ -33,9 +33,7 @@ exports.deleteUserById = async ({ id }) => {
 
 exports.deleteAllUsers = async () => {
   try {
-    User.destroy({
-      where: {},
-    });
+    await User.destroy({ where: {} });
   } catch {
     createError(501, "Note able to delete all users");
   }

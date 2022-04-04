@@ -16,7 +16,8 @@ module.exports = (sequelize) => {
     },
     price: { type: Sequelize.INTEGER },
   });
+
   Product.associate = (db) => {
-    Product.belongsTo(db.users, { foreignKey: "productId" });
+    // Product.belongsTo(db.users, { foreignKey: "productId" });
   };
 };
