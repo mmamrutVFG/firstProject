@@ -1,26 +1,25 @@
-const Sequelize = require("sequelize");
 /**
  * @param {import('sequelize').Sequelize} sequelize
  */
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const Person = sequelize.define("person", {
     id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
       primaryKey: true,
     },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     ci: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     address: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
   });
   Person.associate = (db) => {

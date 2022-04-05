@@ -16,7 +16,8 @@
     "express": "^4.17.3",
     "http-errors": "^2.0.0",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.17.0"
+    "sequelize": "^6.17.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

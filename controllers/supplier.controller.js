@@ -1,9 +1,11 @@
 const createError = require("http-errors");
-const { Supplier, sequelize } = require("../models");
+const { Supplier, SupplierProduct, Product } = require("../models");
 
 exports.getSupplierData = async () => {
   try {
-    return Supplier.findAll();
+    return Supplier.findAll({
+      // include: [{ model: SupplierProduct }],
+    });
   } catch (err) {
     throw createError(500, "Db error");
   }
@@ -41,9 +43,34 @@ exports.deleteAllSuppliers = async ({ id }) => {
 
 exports.associateSupplier = async (supplierId, productId) => {
   try {
-    const supplier = await Supplier.findByPk(supplierId);
-    await supplier.addProducts(productId); // add + nombre del modelo
+    await SupplierProduct.create({ supplierId, productId, stock: 1 });
   } catch (err) {
     throw createError(501, "Not able to associate the supplier");
+  }
+};
+
+exports.numberOfProducts = async (supplierId) => {
+  try {
+    const supplier = await Supplier.findByPk(supplierId);
+    return supplier.countProducts();
+  } catch (err) {
+    throw createError(501, "Not able to reach the number of products");
+  }
+};
+
+exports.productNameBySupplier = async (supplierId) => {
+  try {
+    const suppliers = Supplier.findByPk(supplierId, {
+      include: [
+        {
+          model: Product,
+          attributes: ["name"],
+          through: { attributes: ["stock"] },
+        },
+      ],
+    });
+    return suppliers;
+  } catch (err) {
+    throw createError(501, "Not able to reach the number of products");
   }
 };

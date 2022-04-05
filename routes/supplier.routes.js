@@ -51,4 +51,24 @@ router.put("/associateTo/:id", async (req, res, next) => {
   }
 });
 
+router.get("/numberOfProducts/:id", async (req, res, next) => {
+  try {
+    const result = await supplierController.numberOfProducts(req.params.id);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/productNameBySupplier/:id", async (req, res, next) => {
+  try {
+    const result = await supplierController.productNameBySupplier(
+      req.params.id
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

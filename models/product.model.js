@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
 
   Product.associate = (db) => {
     Product.belongsTo(db.users, { foreignKey: "userId" });
-    Product.belongsToMany(db.suppliers, { through: "supplierProduct" });
+    Product.belongsToMany(db.suppliers, { through: db.supplierProducts });
   };
 
   return Product;
