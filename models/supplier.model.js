@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+
 /**
  * @param {import('sequelize').Sequelize} sequelize
  */
@@ -20,7 +21,7 @@ module.exports = (sequelize) => {
     },
   });
   Supplier.associate = (db) => {
-    Supplier.belongsToMany(db.products, { through: "supplierProduct" });
+    Supplier.belongsToMany(db.products, { through: db.supplierProducts }); // through referenciarlo a la instancia
   };
 
   return Supplier;

@@ -1,5 +1,5 @@
 const createError = require("http-errors");
-const { User, Person, Product } = require("../models");
+const { User, Person, Product, Supplier } = require("../models");
 
 exports.getUsersData = async () => {
   try {
@@ -37,5 +37,33 @@ exports.deleteAllUsers = async () => {
     await User.destroy({ where: {} });
   } catch {
     createError(501, "Note able to delete all users");
+  }
+};
+
+exports.productSuppliersByUser = async (userId) => {
+  try {
+    return User.findByPk(userId, {
+      include: [
+        {
+          model: Product,
+          attributes: ["name"],
+          include: [
+            {
+              model: Supplier,
+              through: { where: { stock: 1 }, attributes: ["stock"] },
+              attributes: ["name"],
+            },
+          ],
+        },
+        {
+          model: Person,
+          required: true, // Trae a todos los usuarios que necesariamente tienen persona asociada
+          attributes: ["name"],
+        },
+      ],
+      logging: console.log,
+    });
+  } catch (err) {
+    throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
   }
 };
