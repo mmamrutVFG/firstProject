@@ -10,4 +10,14 @@ const validateBodyMW = (resourseSchema) => async (req, _, next) => {
   }
 };
 
-module.exports = { validateBodyMW };
+const validateParamsMW = (resourseSchema) => async (req, _, next) => {
+  const { params } = req;
+  try {
+    await resourseSchema().validate(params);
+    next();
+  } catch (err) {
+    next(createError(400, err.message));
+  }
+};
+
+module.exports = { validateBodyMW, validateParamsMW };

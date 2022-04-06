@@ -2,6 +2,12 @@ const express = require("express");
 
 const router = express.Router();
 const productController = require("../controllers/product.controller");
+const { idSchema } = require("../utils/generalValidator");
+const { createProductSchema } = require("../utils/productValidator");
+const {
+  validateBodyMW,
+  validateParamsMW,
+} = require("../utils/validateSchemas");
 
 router.get("/getAll", async (req, res, next) => {
   try {
@@ -12,23 +18,31 @@ router.get("/getAll", async (req, res, next) => {
   }
 });
 
-router.post("/create", async (req, res, next) => {
-  try {
-    await productController.createProductData(req.body);
-    res.sendStatus(201);
-  } catch (err) {
-    next(err);
+router.post(
+  "/create",
+  validateBodyMW(createProductSchema),
+  async (req, res, next) => {
+    try {
+      await productController.createProductData(req.body);
+      res.sendStatus(201);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.delete("/delete/:id", async (req, res, next) => {
-  try {
-    await productController.deleteProductById(req.params); // params se usa cuando paso la info dentro del URL
-    res.sendStatus(200);
-  } catch (err) {
-    next(err);
+router.delete(
+  "/delete/:id",
+  validateParamsMW(idSchema),
+  async (req, res, next) => {
+    try {
+      await productController.deleteProductById(req.params); // params se usa cuando paso la info dentro del URL
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.delete("/deleteAll", async (req, res, next) => {
   try {
@@ -39,13 +53,17 @@ router.delete("/deleteAll", async (req, res, next) => {
   }
 });
 
-router.put("/associateTo/:id", async (req, res, next) => {
-  try {
-    await productController.associateUser(req.params.id, req.body.userId);
-    res.sendStatus(200);
-  } catch (err) {
-    next(err);
+router.put(
+  "/associateTo/:id",
+  validateParamsMW(idSchema),
+  async (req, res, next) => {
+    try {
+      await productController.associateUser(req.params.id, req.body.userId);
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 module.exports = router;

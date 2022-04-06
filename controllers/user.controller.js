@@ -15,7 +15,6 @@ exports.createUserData = async (data) => {
   try {
     await User.create(data, { include: Person });
   } catch (err) {
-    console.log(err);
     throw createError(501, "Not able to create user", {
       attributes: { name: data.name },
     });

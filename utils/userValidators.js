@@ -9,6 +9,6 @@ const createUserSchema = () =>
       ci: Yup.string().required(),
       adress: Yup.string().required(),
     }),
-  });
+  }); // Si quiero agregar otro schema que tengo en otro lado uso .concat
 
 module.exports = { createUserSchema };
