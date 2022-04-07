@@ -1,3 +1,4 @@
+const bcryptjs = require("bcryptjs");
 const createError = require("http-errors");
 const { User, Person, Product, Supplier } = require("../models");
 
@@ -11,12 +12,18 @@ exports.getUsersData = async () => {
   }
 };
 
-exports.createUserData = async (data) => {
+exports.createUserData = async (rawData) => {
   try {
+    const data = { ...rawData, person: { ...rawData.person } }; // ... hace una copia, si no lo pongo hace solo un puntero
+    const passwordHashed = await bcryptjs.hash(
+      data.password,
+      +process.env.SALT_ROUNDS
+    );
+    data.password = passwordHashed;
     await User.create(data, { include: Person });
   } catch (err) {
     throw createError(501, "Not able to create user", {
-      attributes: { name: data.name },
+      attributes: { name: rawData.name },
     });
   }
 };

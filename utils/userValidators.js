@@ -7,7 +7,7 @@ const createUserSchema = () =>
     person: Yup.object({
       name: Yup.string().required(),
       ci: Yup.string().required(),
-      adress: Yup.string().required(),
+      address: Yup.string().required(),
     }),
   }); // Si quiero agregar otro schema que tengo en otro lado uso .concat
 
