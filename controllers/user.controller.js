@@ -1,5 +1,7 @@
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
+
 const { User, Person, Product, Supplier } = require("../models");
 
 exports.getUsersData = async () => {
@@ -8,6 +10,7 @@ exports.getUsersData = async () => {
       include: [{ model: Person }, { model: Product }],
     });
   } catch (err) {
+    // console.log(err);
     throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
   }
 };
@@ -25,6 +28,25 @@ exports.createUserData = async (rawData) => {
     throw createError(501, "Not able to create user", {
       attributes: { name: rawData.name },
     });
+  }
+};
+
+exports.login = async (rawData) => {
+  try {
+    const data = { ...rawData };
+    const user = await User.findOne({
+      where: { email: data.email },
+    });
+    if (!user) {
+      throw createError(501, "User not found");
+    }
+    if (!bcryptjs.compare(data.password, user.password)) {
+      throw createError(501, "Wrong password");
+    }
+    const { id, email } = user;
+    return jwt.sign({ id, email }, process.env.JWT_SECRET, {});
+  } catch (err) {
+    throw createError(501, "Not able to login");
   }
 };
 

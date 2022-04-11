@@ -11,4 +11,10 @@ const createUserSchema = () =>
     }),
   }); // Si quiero agregar otro schema que tengo en otro lado uso .concat
 
-module.exports = { createUserSchema };
+const loginSchema = () =>
+  Yup.object({
+    email: Yup.string().email().required(),
+    password: Yup.required(),
+  });
+
+module.exports = { createUserSchema, loginSchema };

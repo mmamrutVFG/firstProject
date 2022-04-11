@@ -31,6 +31,15 @@ router.post(
   }
 );
 
+router.post("/login", async (req, res, next) => {
+  try {
+    const token = await userController.login(req.body);
+    return res.json({ token });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 router.delete(
   "/delete/:id",
   validateParamsMW(idSchema),
