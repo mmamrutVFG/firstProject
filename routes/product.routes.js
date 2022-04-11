@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require("passport");
 
 const router = express.Router();
 const productController = require("../controllers/product.controller");
@@ -21,6 +22,7 @@ router.get("/getAll", async (req, res, next) => {
 router.post(
   "/create",
   validateBodyMW(createProductSchema),
+  passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
       await productController.createProductData(req.body);
