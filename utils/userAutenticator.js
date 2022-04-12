@@ -13,6 +13,7 @@ passport.use(
         // Elijo la información que quiero sacar del token para usar en el front
         id: jwtPayload.id,
         email: jwtPayload.email,
+        role: jwtPayload.role,
       };
       done(null, user); // La información que saco del toquen queda guardada en req.user (de la función que llamó al middleware)
     }
