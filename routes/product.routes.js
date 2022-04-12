@@ -9,15 +9,21 @@ const {
   validateBodyMW,
   validateParamsMW,
 } = require("../utils/validateSchemas");
+const { rolAuthenticator } = require("../utils/roles");
 
-router.get("/getAll", async (req, res, next) => {
-  try {
-    const result = await productController.getProductData();
-    res.status(200).json(result);
-  } catch (err) {
-    next(err);
+router.get(
+  "/getAll",
+  passport.authenticate("jwt", { session: false }),
+  rolAuthenticator("Admin"),
+  async (req, res, next) => {
+    try {
+      const result = await productController.getProductData();
+      res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.post(
   "/create",

@@ -37,16 +37,13 @@ exports.login = async (rawData) => {
     const user = await User.findOne({
       where: { email: data.email },
     });
-    if (!user) {
-      throw createError(501, "User not found");
+    if (!user || !bcryptjs.compare(data.password, user.password)) {
+      throw createError(401, "Incorrect user or password");
     }
-    if (!bcryptjs.compare(data.password, user.password)) {
-      throw createError(501, "Wrong password");
-    }
-    const { id, email } = user;
-    return jwt.sign({ id, email }, process.env.JWT_SECRET, {});
+    const { id, email, role } = user;
+    return jwt.sign({ id, email, role }, process.env.JWT_SECRET, {});
   } catch (err) {
-    throw createError(501, "Not able to login");
+    throw createError(401, "Not able to login");
   }
 };
 

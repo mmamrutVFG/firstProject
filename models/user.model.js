@@ -18,6 +18,10 @@ module.exports = (sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    role: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
   });
 
   User.associate = (db) => {
