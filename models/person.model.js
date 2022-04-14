@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
     },
+    celphone: {
+      type: DataTypes.STRING,
+    },
   });
   Person.associate = (db) => {
     Person.belongsTo(db.users, { foreignKey: "userId" });

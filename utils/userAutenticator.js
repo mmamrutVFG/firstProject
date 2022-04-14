@@ -14,8 +14,9 @@ passport.use(
         id: jwtPayload.id,
         email: jwtPayload.email,
         role: jwtPayload.role,
+        person: jwtPayload.person,
       };
-      done(null, user); // La información que saco del toquen queda guardada en req.user (de la función que llamó al middleware)
+      done(null, user); // La información que saco del token queda guardada en req.user (de la función que llamó al middleware)
     }
   )
 );

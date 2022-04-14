@@ -1,4 +1,5 @@
 const express = require("express");
+const nodemailer = require("nodemailer");
 
 const router = express.Router();
 const userController = require("../controllers/user.controller");
@@ -8,6 +9,27 @@ const {
   validateBodyMW,
   validateParamsMW,
 } = require("../utils/validateSchemas");
+
+// Esta función va acá o en el controller?
+const confirmationEmail = async (user) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "d249965b1a0647",
+      pass: "abaa1156a13242",
+    },
+  });
+
+  await transporter.sendMail({
+    from: "maurimamrut@gmail.com", // sender address
+    to: user.email, // list of receivers
+    subject: `${user.person.name} , your user was created succesfully`,
+    text: "User created",
+    html: "<b>Welcome</b>",
+  });
+};
 
 router.get("/getAll", async (req, res, next) => {
   try {
@@ -23,7 +45,8 @@ router.post(
   validateBodyMW(createUserSchema),
   async (req, res, next) => {
     try {
-      await userController.createUserData(req.body);
+      const user = await userController.createUserData(req.body);
+      confirmationEmail(user);
       res.sendStatus(201);
     } catch (err) {
       next(err);

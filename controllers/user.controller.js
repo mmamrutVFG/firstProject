@@ -15,6 +15,14 @@ exports.getUsersData = async () => {
   }
 };
 
+exports.getUserById = async ({ id }) => {
+  try {
+    return await User.findOne({ where: { id } });
+  } catch (err) {
+    throw createError(500, "Db error");
+  }
+};
+
 exports.createUserData = async (rawData) => {
   try {
     const data = { ...rawData, person: { ...rawData.person } }; // ... hace una copia, si no lo pongo hace solo un puntero
@@ -23,7 +31,8 @@ exports.createUserData = async (rawData) => {
       +process.env.SALT_ROUNDS
     );
     data.password = passwordHashed;
-    await User.create(data, { include: Person });
+    const user = await User.create(data, { include: Person });
+    return user;
   } catch (err) {
     throw createError(501, "Not able to create user", {
       attributes: { name: rawData.name },
@@ -36,12 +45,13 @@ exports.login = async (rawData) => {
     const data = { ...rawData };
     const user = await User.findOne({
       where: { email: data.email },
+      include: [{ model: Person, attributes: ["celphone", "name"] }],
     });
     if (!user || !bcryptjs.compare(data.password, user.password)) {
       throw createError(401, "Incorrect user or password");
     }
-    const { id, email, role } = user;
-    return jwt.sign({ id, email, role }, process.env.JWT_SECRET, {});
+    const { id, email, role, person } = user;
+    return jwt.sign({ id, email, role, person }, process.env.JWT_SECRET, {});
   } catch (err) {
     throw createError(401, "Not able to login");
   }
