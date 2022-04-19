@@ -1,16 +1,47 @@
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
+const nodemailer = require("nodemailer");
 
 const { User, Person, Product, Supplier } = require("../models");
 
+const confirmationEmail = async (user) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "d249965b1a0647",
+      pass: "abaa1156a13242",
+    },
+  });
+
+  await transporter.sendMail({
+    from: "maurimamrut@gmail.com", // sender address
+    to: user.email, // list of receivers
+    subject: `${user.person.name} , your user was created succesfully`,
+    text: "User created",
+    html: "<b>Welcome</b>",
+  });
+};
+
 exports.getUsersData = async () => {
   try {
-    return User.findAll({
+    const users = await User.findAll({
       include: [{ model: Person }, { model: Product }],
+      // raw: true,
     });
+
+    const data = users.map((user) => {
+      const aux = {};
+
+      aux.id = user.id;
+      aux.name = user.person.name;
+      aux.products = user.products.map((product) => product.name).join(" - ");
+      return aux;
+    });
+    return data;
   } catch (err) {
-    // console.log(err);
     throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
   }
 };
@@ -32,6 +63,7 @@ exports.createUserData = async (rawData) => {
     );
     data.password = passwordHashed;
     const user = await User.create(data, { include: Person });
+    confirmationEmail(user);
     return user;
   } catch (err) {
     throw createError(501, "Not able to create user", {

@@ -1,4 +1,5 @@
 const createError = require("http-errors");
+const { parse } = require("csv-parse");
 
 const { Product } = require("../models");
 
@@ -57,12 +58,26 @@ exports.associateUser = async (productId, userId) => {
 };
 
 exports.upload = async (file) => {
-  /*
   try {
     if (!file) {
       throw createError(415, "Please upload a CSV file");
     }
-    const fileBuffer = file.buffer.toString().split("\r\n");
+
+    const products = await new Promise((resolve, reject) => {
+      parse(file.buffer, { delimiter: ";", columns: true }, (err, records) => {
+        if (err) {
+          reject(createError(400, err));
+          return;
+        }
+        resolve(records);
+      });
+    });
+
+    await Product.bulkCreate(products);
+
+    // const arrayFile = file.buffer.toString().split(";");
+    // const products = arrayFile.filter((x) => x !== "" && x !== "\r\n");
+    /*
       .pipe(csv.parse({ headers: true }))
       .on("error", (err) => {
         throw err.message;
@@ -72,11 +87,10 @@ exports.upload = async (file) => {
         products.push(row);
       })
       .on("end", async () => {
-        await Product.bulkCreate(products);
       });
+      */
   } catch (err) {
     console.log(err);
     throw createError(400, "Not able to upload the file");
   }
-  */
 };
