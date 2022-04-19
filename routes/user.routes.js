@@ -1,5 +1,5 @@
+const { stringify } = require("csv-stringify");
 const express = require("express");
-const nodemailer = require("nodemailer");
 
 const router = express.Router();
 const userController = require("../controllers/user.controller");
@@ -10,31 +10,14 @@ const {
   validateParamsMW,
 } = require("../utils/validateSchemas");
 
-// Esta función va acá o en el controller?
-const confirmationEmail = async (user) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "d249965b1a0647",
-      pass: "abaa1156a13242",
-    },
-  });
-
-  await transporter.sendMail({
-    from: "maurimamrut@gmail.com", // sender address
-    to: user.email, // list of receivers
-    subject: `${user.person.name} , your user was created succesfully`,
-    text: "User created",
-    html: "<b>Welcome</b>",
-  });
+const usersReport = (res, data) => {
+  stringify(data, { delimiter: ";", header: true }).pipe(res);
 };
 
 router.get("/getAll", async (req, res, next) => {
   try {
     const result = await userController.getUsersData();
-    res.status(200).json(result);
+    usersReport(res, result);
   } catch (err) {
     next(err);
   }
@@ -45,8 +28,7 @@ router.post(
   validateBodyMW(createUserSchema),
   async (req, res, next) => {
     try {
-      const user = await userController.createUserData(req.body);
-      confirmationEmail(user);
+      await userController.createUserData(req.body);
       res.sendStatus(201);
     } catch (err) {
       next(err);
