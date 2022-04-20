@@ -11,6 +11,13 @@ const {
 } = require("../utils/validateSchemas");
 
 const usersReport = (res, data) => {
+  res.set({
+    "Content-Disposition": `attachment; filename="UserReport.csv"`,
+    "attachment-filename": `UserReport.csv`,
+    "Access-Control-Expose-Headers": `attachment-filename`,
+  });
+  // const columns = ["ID", "NAME", "PRODUCTS"];
+
   stringify(data, { delimiter: ";", header: true }).pipe(res);
 };
 

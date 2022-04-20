@@ -1,12 +1,51 @@
 const createError = require("http-errors");
 const { parse } = require("csv-parse");
+const fs = require("fs");
 
+const PdfPrinter = require("pdfmake");
 const { Product } = require("../models");
+const fonts = require("../utils/fonts");
+const styles = require("../utils/styles");
 
+/*
+const getContent = (products) => {
+  const content = [
+    {
+      layout: "lightHorizontalLines", // optional
+      table: {
+        // headers are automatically repeated if the table spans over multiple pages
+        // you can declare how many rows should be treated as headers
+        headerRows: 1,
+        widths: ["*", "auto", 100, "*"],
+
+        body: products, // Ver como pasar los objectos a array ordenado
+      },
+    },
+  ];
+  return content;
+};
+*/
 exports.getProductData = async () => {
   try {
-    return Product.findAll();
+    const products = await Product.findAll();
+    const data = products.map((product) => {
+      const aux = {};
+      aux.id = product.id;
+      aux.name = product.name;
+      aux.price = product.price;
+      return aux;
+    });
+
+    const docDefinition = {
+      content: { text: "Prueba texto" }, // getContent(data),
+      styles,
+    };
+    const printer = new PdfPrinter(fonts);
+    const pdfDoc = printer.createPdfKitDocument(docDefinition);
+    pdfDoc.pipe(fs.createWriteStream("prueba1.pdf"));
+    pdfDoc.end();
   } catch (err) {
+    console.log(err);
     throw createError(500, "Db error"); // {attributes: {nombre:data.nombre}} pasarle mas datos para identificar el error
   }
 };

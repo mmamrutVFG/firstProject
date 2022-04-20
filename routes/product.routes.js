@@ -18,8 +18,8 @@ const upload = require("../utils/uploadingFiles");
 
 router.get(
   "/getAll",
-  passport.authenticate("jwt", { session: false }),
-  rolAuthenticator("Admin"),
+  // passport.authenticate("jwt", { session: false }),
+  // rolAuthenticator("Admin"),
   async (req, res, next) => {
     try {
       const result = await productController.getProductData();
